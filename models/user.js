@@ -4,6 +4,7 @@ module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
+        //id는 기본적으로 알아서 만들어 줌
         email: {
           type: Sequelize.STRING(40),
           allowNull: true,

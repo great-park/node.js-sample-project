@@ -5,9 +5,11 @@ const path = require("path");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
+const passport = require("passport");
 
 dotenv.config(); //process.env에 설정값들이 들어감
 const pageRouter = require("./routes/page");
+const authRouter = require("./routes/auth");
 
 const app = express();
 app.set("port", process.env.PORT || 8001); //배포할 때는 .env파일에 포트 번호 명시, 없다면 개발 환경인 8001으로 서버 실행
@@ -17,6 +19,14 @@ nunjucks.configure("views", {
   express: app,
   watch: true,
 });
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결 성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -36,7 +46,12 @@ app.use(
   })
 );
 
+//세션 설정 밑, 라우터 위에 위치
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", pageRouter);
+app.use("/auth", authRouter);
 
 //모든 라우터 이후에 실시 -> 404
 //다음 미들웨어인 에러 미들웨어로 넘어감
