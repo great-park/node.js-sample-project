@@ -10,6 +10,8 @@ const passport = require("passport");
 dotenv.config(); //process.env에 설정값들이 들어감
 const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
+const { sequelize } = require("./models");
+const passportConfig = require("./passport");
 
 const app = express();
 app.set("port", process.env.PORT || 8001); //배포할 때는 .env파일에 포트 번호 명시, 없다면 개발 환경인 8001으로 서버 실행
@@ -27,6 +29,7 @@ sequelize
   .catch((err) => {
     console.error(err);
   });
+passportConfig();
 
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));

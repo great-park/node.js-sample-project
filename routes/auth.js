@@ -59,8 +59,12 @@ router.get("/logout", isLoggedIn, (req, res) => {
   res.redirect("/");
 });
 
+//카카오 로그인 -> kakaoStrategy로 이동(실제 웹에서 카카오 로그인) 첫번째 실행
 router.get("/kakao", passport.authenticate("kakao"));
 
+//카카오 로그인 성공하면 카카오가 리다이렉트 설정한 url로 요청을 쏴주고, 우리는 data를 받게 된다.
+//받은 데이터로  passport.authenticate 실행
+//두번째 실행 -> 그 다음 콜백이 실행되어 회원가입 유무에 따라 로그인 실행
 router.get(
   "/kakao/callback",
   passport.authenticate("kakao", {

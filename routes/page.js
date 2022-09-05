@@ -20,9 +20,11 @@ router.get("/join", (req, res) => {
 
 router.get("/", (req, res, next) => {
   const twits = [];
+  const user = req.user;
   res.render("main", {
     title: "NodeBird",
     twits,
+    user: user,
   });
 });
 
